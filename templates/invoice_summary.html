@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Invoice Summary</title>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .invoice-box {
+            width: 210mm;
+            min-height: 297mm;
+            margin: auto;
+            padding: 40px;
+            background: white;
+            color: #000;
+            font-size: 14px;
+        }
+
+        .invoice-header,
+        .invoice-details,
+        .invoice-table,
+        .invoice-footer {
+            margin-bottom: 20px;
+        }
+
+        .invoice-header h1 {
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .invoice-header .company {
+            text-align: right;
+        }
+
+        .invoice-table th {
+            background: #e9ecef;
+        }
+
+        .text-end {
+            text-align: right;
+        }
+
+        .btn-print {
+            position: fixed;
+            top: 15px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .btn-print {
+                display: none;
+            }
+            .invoice-box {
+                box-shadow: none;
+                width: 100%;
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Print Button -->
+<button onclick="window.print()" class="btn btn-primary btn-print">🖨️ Print Invoice</button>
+
+<!-- Invoice Box -->
+<div class="invoice-box">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between invoice-header">
+        <div>
+            <h1>INVOICE</h1>
+            <p><strong>Date:</strong> {{ date }}</p>
+        </div>
+        <div class="company">
+            <h5>Your Company Name</h5>
+            <p>123 Business Rd,<br>Chennai, India<br>Email: company@example.com</p>
+        </div>
+    </div>
+
+    <!-- Customer Info -->
+    <div class="row invoice-details">
+        <div class="col-md-6">
+            <h6>👤 Billed To:</h6>
+            <p>
+                <strong>{{ name }}</strong><br>
+                {{ contact }}<br>
+                {{ address }}
+            </p>
+        </div>
+        <div class="col-md-6 text-end">
+            <h6>📄 Invoice Info:</h6>
+            <p>
+                <strong>Date:</strong> {{ date }}<br>
+                <strong>Invoice ID:</strong> Auto Generated
+            </p>
+        </div>
+    </div>
+
+    <!-- Item Table -->
+    <div class="invoice-table">
+        <h6>🛍️ Items</h6>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th class="text-end">Quantity</th>
+                    <th class="text-end">Price (₹)</th>
+                    <th class="text-end">Total (₹)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.item_name }}</td>
+                    <td class="text-end">{{ item.qty }}</td>
+                    <td class="text-end">₹{{ item.price }}</td>
+                    <td class="text-end">₹{{ item.total }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Total Section -->
+    <div class="invoice-footer text-end">
+        <h5>Total: ₹{{ total_amount }}</h5>
+    </div>
+
+</div>
+
+</body>
+</html>
